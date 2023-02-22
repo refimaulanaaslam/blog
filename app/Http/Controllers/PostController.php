@@ -26,7 +26,7 @@ class PostController extends Controller
             //get() ialah sebuah fungsi untuk mengambil semua data di dalam database
             //bisa juga berfungsi mengambil data yg ada pada model clas post
             //filter() ngambil dari model
-            "posts" => Post::latest()->Filter()->get()
+            "posts" => Post::latest()->Filter(request(['search']))->get()
         ]);
     }
 

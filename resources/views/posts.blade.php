@@ -19,13 +19,15 @@
         <img src="https://source.unsplash.com/1200x400?{{ $posts[0]->category->name }}" class="card-img-top" alt="...">
         <div class="card-body text-center">
             <h3 class="card-title"><a href="/posts/{{ $posts[0]->slug}}" class="text-decoration-none text-dark"> 
-                {{ $posts[0]->category->name}}</a></h3>
+                {{ $posts[0]->slug}}</a> | <a href="/categories/{{ $posts[0]->category->slug }}" class="text-decoration-none text-dark">{{ $posts[0]->category->name }}</a></h3>
             <small class="text-muted ">
                 By :<a href="/author/{{ $posts[0]->user->username }}" class="text-decoration-none text-danger">{{ $posts[0]->user->name }}</a>in
-                    <a href="/categories/{{ $posts[0]->category->slug }}" class="text-decoration-none text-danger">{{$posts[0]->category->name}}</a> {{ $posts[0]->created_at->diffForHumans() }}
+                    <a href="/categories/{{ $posts[0]->category->slug }}" class="text-decoration-none text-danger">{{$posts[0]->category->name}}</a>
+                    {{-- diffForHumans() untuk agar tanggal postingannya bisa dibaca dengan user ambil data created  di db lalu change pada method  diffForhumans() --}}
+                    {{ $posts[0]->created_at->diffForHumans() }}
             </small>
             <p class="card-text">{{ $posts[0]->excerpt }}</p>
-            <a href="/post/{{ $posts[0]->slug }}" class="btn btn-danger">Read More...</a>
+            <a href="/posts/{{ $posts[0]->slug }}" class="btn btn-danger rounded-0 p-3 px-4">Read More</a>
         </div>
     </div>
 

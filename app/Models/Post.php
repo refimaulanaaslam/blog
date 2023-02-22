@@ -17,14 +17,14 @@ class Post extends Model
     protected $with = ['category', 'user'];
 
     //searching form
-    public function scopeFilter($query){
-        //search ngambil dari name si form yg ada di posts.blade
-        if(request('search')){
+    public function scopeFilter($query, array $filters){
 
-                //where adalah fungsi query search
-                $query->where('title', 'like', '%' . request('search') . '%')
-                    ->orWhere('body', 'like', '%' . request('search' . '%'));
-        }
+        $query->when($filters['search'] ?? false, function($query, $search){
+            //where adalah perintah query yg meminta data search yg akan mengambil data dari db dan dikembalikan lgi ke controller
+           return $query->where('title', 'like', '%' . $search . '%')
+                  ->orWhere('body', 'like', '%' . $search . '%');
+        });
+            
     }
 
     //relasi table posts dan categori
