@@ -20,13 +20,21 @@ class PostController extends Controller
     //     ]);
     // }
     public function index(){
-        
+        $title = '';
+        if (request('category')) {
+                $category = Category::firstWhere('slug', request('category'));
+                $title = ' in ' . $category->name;
+        }
+        if (request('user')) {
+                $user = User::firstWhere('username', request('user'));
+                $title = ' in ' . $user->name;
+        }
         return view('posts', [
-            "title" => "All Posts",
+            "title" => "All Posts" . $title,
+            "posts" => Post::latest()->Filter(request(['search','category', 'user']))->paginate(7)->withQueryString()
             //get() ialah sebuah fungsi untuk mengambil semua data di dalam database
             //bisa juga berfungsi mengambil data yg ada pada model clas post
             //filter() ngambil dari model
-            "posts" => Post::latest()->Filter(request(['search']))->get()
         ]);
     }
 
@@ -39,23 +47,6 @@ class PostController extends Controller
 
     }
 
-    //request page author
-    public function author(User $author){
-        return view('posts', [
-            'title' => 'Post By : '.$author->name,
-            //lazyeagerloader mengambil data yg terkait pada author
-            'posts' => $author->posts->load('category', 'user'),
-        ]);
-    }
-
-    //request page berdasarkan category
-    public function categories(Category $category){
-        return view('posts', [
-            'title' => 'Post By :'.$category->name,
-            'posts' => $category->posts->load('category', 'user'),
-            'category' => $category->name
-        ]);
-    }
 
     //request page berdasarkan dari judul categori
     public function TitleCategory(Category $categories){

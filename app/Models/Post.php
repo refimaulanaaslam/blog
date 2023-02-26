@@ -21,14 +21,28 @@ class Post extends Model
 
         $query->when($filters['search'] ?? false, function($query, $search){
             //where adalah perintah query yg meminta data search yg akan mengambil data dari db dan dikembalikan lgi ke controller
-           return $query->where('title', 'like', '%' . $search . '%')
+           return $query->where('slug', 'like', '%' . $search . '%')
                   ->orWhere('body', 'like', '%' . $search . '%');
         });
+
+        $query->when($filters['category'] ?? false, function($query, $category){
+            //where has ialah mengambil function category yg berarti jika ada relasi pada post ia akan mengambil data foreign tersebut
+           return $query->whereHas('category', function($query) use ($category){
+                $query->where('slug', $category);
+            });
+        });
+        // fn arrow function 
+        $query->when($filters['user'] ?? false, fn($query, $user) =>
+            //where has ialah mengambil query function category yg berarti jika ada relasi pada post ia akan mengambil data foreign tersebut
+            $query->whereHas('user', fn($query)=>
+                $query->where('username', $user)
+            )
+        );
             
     }
 
     //relasi table posts dan categori
-    public function category(){
+    public function category(){ 
         return $this->belongsTo(Category::class);
     }
 

@@ -5,7 +5,13 @@
 <h1 class="mt-5 text-center">{{ $title }}</h1>
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <form action="posts">
+        <form action="/posts">
+            @if (request('category'))
+                <input type="hidden" name="category" value="{{ request('category') }}">
+            @endif
+            @if (request('user'))
+                <input type="hidden" name="user" value="{{ request('user') }}">
+            @endif
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search..." name="search" value="{{ request('search') }}">
                 <button class="btn btn-danger" type="submit">Search</button>
@@ -21,8 +27,8 @@
             <h3 class="card-title"><a href="/posts/{{ $posts[0]->slug}}" class="text-decoration-none text-dark"> 
                 {{ $posts[0]->slug}}</a> | <a href="/categories/{{ $posts[0]->category->slug }}" class="text-decoration-none text-dark">{{ $posts[0]->category->name }}</a></h3>
             <small class="text-muted ">
-                By :<a href="/author/{{ $posts[0]->user->username }}" class="text-decoration-none text-danger">{{ $posts[0]->user->name }}</a>in
-                    <a href="/categories/{{ $posts[0]->category->slug }}" class="text-decoration-none text-danger">{{$posts[0]->category->name}}</a>
+                By :<a href="/posts?user={{ $posts[0]->user->username }}" class="text-decoration-none text-danger">{{ $posts[0]->user->name }}</a>in
+                    <a href="/posts?category={{ $posts[0]->category->slug }}" class="text-decoration-none text-danger">{{$posts[0]->category->name}}</a>
                     {{-- diffForHumans() untuk agar tanggal postingannya bisa dibaca dengan user ambil data created  di db lalu change pada method  diffForhumans() --}}
                     {{ $posts[0]->created_at->diffForHumans() }}
             </small>
@@ -35,13 +41,13 @@
     <div class="row">
         @foreach ($posts->skip(1) as $post)
         <div class="col-md-4 mb-3">
-            <div class="card" style="min-height : 660px">
-                <div class="position-absolute px-4 py-2" style="background-color: rgb(0, 0, 0,0.7)"><a href="/categories/{{ $post->category->slug }}" class="text-decoration-none text-white">{{ $post->category->name }}</a></div>
+            <div class="card" style="min-height : 670px">
+                <div class="position-absolute px-4 py-2" style="background-color: rgb(0, 0, 0,0.7)"><a href="/posts?category={{ $post->category->slug }}" class="text-decoration-none text-white">{{ $post->category->name }}</a></div>
                 <img src="https://source.unsplash.com/500x450?{{ $post->category->name }}" class="card-img-top" alt="{{ $post->category->name }}">
                 <div class="card-body">
-                    <h5 class="card-title p-2">{{ $post->title}}</h5>
+                    <h5 class="card-title p-2">{{ $post->slug}}</h5>
                     <small class="text-muted p-2">
-                        By :<a href="/author/{{ $post->user->username }}" class="text-decoration-none text-danger">{{ $post->user->name }}</a> {{ $post->created_at->diffForHumans() }}
+                        By :<a href="/posts?user={{ $post->user->username }}" class="text-decoration-none text-danger">{{ $post->user->name }}</a> {{ $post->created_at->diffForHumans() }}
                     </small>
                         <p class="card-text" style="margin-bottom: 20px">{{ $post->excerpt }}</p>
                     <div class="buton" style=""> 
@@ -56,4 +62,10 @@
 @else
     <p class="text-center fs-3">No Post Found</p>
 @endif
+
+{{-- pagination --}}
+<div class="d-flex justify-content-center">
+{{ $posts->links() }}
+</div>
 @endsection
+

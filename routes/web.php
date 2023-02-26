@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\Post;
 use Illuminate\Http\Request;
-use App\Http\Controllers\PostController;
-use Illuminate\Support\Facades\Route;
 use PhpParser\Node\Expr\PostDec;
-use App\Models\Category;
-use App\Models\User;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,12 +40,16 @@ Route::get('/about', function () {
 Route::get('/posts', [PostController::class, 'index']);
 //page keseluruhan post
 Route::get('/posts/{post:slug}', [PostController::class, 'show']);
-//page post berdasarkan category penulis
-Route::get('/author/{author:username}', [PostController::class, 'author']);
 //page post berdasarkan category judul 
 Route::get('/categories', [PostController::class, 'TitleCategory']);
-//page post berdasarkan judul 
-Route::get('/categories/{category:slug}',[PostController::class, 'categories']);
+
+//page login authenticate
+Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
+Route::post('/login', [LoginController::class, 'authenticate']);
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
+
+Route::post('/logout', [LoginController::class, 'logout']);
 
 
 
