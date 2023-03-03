@@ -3,7 +3,7 @@
 @section('container')
 <div class="row justify-content-center mt-3">
     <div class="col-md-4">
-        @if (session()->has('succes'))
+        @if (session()->has('success'))
             <div class="alert alert-succes alert-dismissible fade show">
                 {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>

@@ -33,7 +33,7 @@ class Post extends Model
         });
         // fn arrow function 
         $query->when($filters['user'] ?? false, fn($query, $user) =>
-            //where has ialah mengambil query function category yg berarti jika ada relasi pada post ia akan mengambil data foreign tersebut
+            //where has ialah mengambil query function category yg berarti jika ada relasi pada tabel post ia akan mengambil data foreign tersebut
             $query->whereHas('user', fn($query)=>
                 $query->where('username', $user)
             )
@@ -48,5 +48,11 @@ class Post extends Model
 
     public function user(){
         return $this->belongsTo(User::class);
+    }
+
+    // untuk ngasih tau di route resource bahwa ketika ada route model binding slug jalankan contoller show 
+    public function getRouteKeyName()
+    {
+        return 'slug';
     }
 }

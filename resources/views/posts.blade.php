@@ -3,6 +3,7 @@
 
 @section('container')
 <h1 class="mt-5 text-center">{{ $title }}</h1>
+{{-- Searching --}}
 <div class="row justify-content-center">
     <div class="col-md-6">
         <form action="/posts">
@@ -20,9 +21,16 @@
     </div>
 </div>
 
+{{-- Header post --}}
 @if ($posts->count())
     <div class="card mb-3">
-        <img src="https://source.unsplash.com/1200x400?{{ $posts[0]->category->name }}" class="card-img-top" alt="...">
+        @if ($posts[0]->image)
+        <div style="max-height:350px; overflow:hidden;">
+            <img src="{{ asset('storage/' . $posts[0]->image) }}" class="card-img-top" alt="...">
+        </div>
+        @else
+        <img src="https://source.unsplash.com/500x400?{{ $posts[0]->category->name }}" class="card-img-top" alt="...">
+        @endif
         <div class="card-body text-center">
             <h3 class="card-title"><a href="/posts/{{ $posts[0]->slug}}" class="text-decoration-none text-dark"> 
                 {{ $posts[0]->slug}}</a> | <a href="/categories/{{ $posts[0]->category->slug }}" class="text-decoration-none text-dark">{{ $posts[0]->category->name }}</a></h3>
@@ -36,14 +44,18 @@
             <a href="/posts/{{ $posts[0]->slug }}" class="btn btn-danger rounded-0 p-3 px-4">Read More</a>
         </div>
     </div>
-
+{{-- main content --}}
 <div class="container">
     <div class="row">
         @foreach ($posts->skip(1) as $post)
         <div class="col-md-4 mb-3">
             <div class="card" style="min-height : 670px">
                 <div class="position-absolute px-4 py-2" style="background-color: rgb(0, 0, 0,0.7)"><a href="/posts?category={{ $post->category->slug }}" class="text-decoration-none text-white">{{ $post->category->name }}</a></div>
-                <img src="https://source.unsplash.com/500x450?{{ $post->category->name }}" class="card-img-top" alt="{{ $post->category->name }}">
+                @if ($post->image)
+                    <img src="{{ asset('storage/' . $post->image) }}" class="card-img-top" alt="{{ $post->category->name }}">
+                @else
+                    <img src="https://source.unsplash.com/500x400?{{ $post->category->name }}" class="card-img-top" alt="...">
+                @endif
                 <div class="card-body">
                     <h5 class="card-title p-2">{{ $post->slug}}</h5>
                     <small class="text-muted p-2">

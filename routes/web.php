@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminCategoryController;
+use App\Http\Controllers\DashboardPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,8 +29,8 @@ Route::get('/', function () {
 Route::get('/about', function () {
     return view('about', [
         "title" => "about",
-        "name" => "sandhika galih",
-        "email" => "sandhika@gmail.com"
+        "name" => "Refi Maulana Aslam",
+        "email" => "refi@gmail.com"
     ]);
 });
 
@@ -38,18 +39,24 @@ Route::get('/about', function () {
 // Route::get('/posts/{id}', [PostController::class, 'post']);
 //page seluruh post
 Route::get('/posts', [PostController::class, 'index']);
-//page keseluruhan post
 Route::get('/posts/{post:slug}', [PostController::class, 'show']);
-//page post berdasarkan category judul 
 Route::get('/categories', [PostController::class, 'TitleCategory']);
 
-//page login authenticate
+//page login&logout authenticate
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/login', [LoginController::class, 'authenticate']);
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth');
+Route::get('/dashboard', function(){
+    return view('dashboard.index',);
+})->middleware('auth');
 Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
-
 Route::post('/logout', [LoginController::class, 'logout']);
+
+//route dashboard 
+Route::resource('/dashboard/posts', DashboardPostController::class)->middleware('auth');
+
+//route categories "authorization"
+Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin');
+
 
 
 

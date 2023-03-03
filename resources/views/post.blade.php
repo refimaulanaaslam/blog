@@ -10,8 +10,13 @@
             <div class="col-md-8">
                     <h2 class="text-center">{{$posts->title}}</h2>  
                     <p class="text-center">By {{ $posts->user->name }} in <a href="/categories/{{ $posts->category->slug }}">{{ $posts->category->name }}</a></p>
-                    <img src="https://source.unsplash.com/1200x400?{{ $posts->category->name }}" class="img-fluid rounded" style="height:
-                    400" alt="{{ $posts->category->name }}">
+                    @if ($posts->image)
+                    <img src="{{ asset('storage/' . $posts->image) }}" class="img-fluid rounded" alt="{{ $posts->category->name }}" style="height:
+                    400">
+                    @else
+                    <img src="https://source.unsplash.com/1200x800?{{ $posts->category->name }}" class="img-fluid my-3" alt="{{ $posts->category->name }}" style="height:
+                    400">
+                    @endif
                 <article class="my-4 fs-6">
                     {!! $posts->body !!}
                 </article>
